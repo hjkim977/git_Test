@@ -1,0 +1,42 @@
+name: Update index.html with current time
+
+on: #언제 동작 시킬건지
+    push:
+         branches: { main }
+
+permissions: #권한을 어떻게 줄건지
+    contents: write #contents에 대해서 write 권한을 준다
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: actions/checkout@v4
+
+        - name: Set up Python 3.11
+          uses: actions/setup-python@v3 #actions에서 제공하고 있는 setup-python ver3 을 사용하겠다
+          with:
+            python-version: 3.11
+
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            python -m pip install flake8 pytest
+            if { -f requirements.txt }; then pip install -r
+
+        - name: Run Python script
+          run: |
+            python update_time.py
+
+        - name: Commit updated index.html
+          uses: EndBug/add-and-commit@v7
+          with:
+            author_name: hjkim977
+            author_email: eoegog@naver.com
+            message: Update index.html with current time
+            add: "index.html"    
+
+
+
+
